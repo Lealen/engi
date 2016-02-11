@@ -3,7 +3,7 @@ package engi
 import (
 	"log"
 
-	"github.com/paked/engi/ecs"
+	"github.com/Lealen/engi/ecs"
 )
 
 type AnimationAction struct {

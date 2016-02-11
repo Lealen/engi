@@ -1,4 +1,4 @@
-// +build netgo
+// +build js
 
 package engi
 
@@ -8,22 +8,24 @@ import (
 	"math/rand"
 	"strconv"
 
+	"github.com/Lealen/webgl"
+	"github.com/golang/freetype"
+	"github.com/golang/freetype/truetype"
 	"github.com/gopherjs/gopherjs/js"
-	"github.com/paked/webgl"
 )
 
 func init() {
 	rafPolyfill()
 }
 
-var canvas js.Object
+var canvas *js.Object
 
 func run(title string, width, height int, fullscreen bool) {
 	document := js.Global.Get("document")
 	canvas = document.Call("createElement", "canvas")
 
 	target := document.Call("getElementById", title)
-	if target.IsNull() {
+	if target.Length() == 0 {
 		target = document.Get("body")
 	}
 	target.Call("appendChild", canvas)
@@ -36,13 +38,13 @@ func run(title string, width, height int, fullscreen bool) {
 	attrs.Antialias = false
 
 	var err error
-	Gl, err = webgl.NewContext(canvas, attrs)
+	Gl, err = webgl.NewContext(*canvas, attrs)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	js.Global.Set("onunload", func() {
-		responder.Close()
+		//responder.Close()
 	})
 
 	canvas.Get("style").Set("display", "block")
@@ -62,21 +64,33 @@ func run(title string, width, height int, fullscreen bool) {
 		rect := canvas.Call("getBoundingClientRect")
 		x := float32((ev.Get("clientX").Int() - rect.Get("left").Int()))
 		y := float32((ev.Get("clientY").Int() - rect.Get("top").Int()))
-		responder.Mouse(x, y, MOVE)
+
+		Mouse.X, Mouse.Y = float32(x), float32(y)
+		Mouse.Action = MOVE
+
+		//responder.Mouse(x, y, MOVE)
 	}, false)
 
 	canvas.Call("addEventListener", "mousedown", func(ev js.Object) {
 		rect := canvas.Call("getBoundingClientRect")
 		x := float32((ev.Get("clientX").Int() - rect.Get("left").Int()))
 		y := float32((ev.Get("clientY").Int() - rect.Get("top").Int()))
-		responder.Mouse(x, y, PRESS)
+
+		Mouse.X, Mouse.Y = float32(x), float32(y)
+		Mouse.Action = PRESS
+
+		//responder.Mouse(x, y, PRESS)
 	}, false)
 
 	canvas.Call("addEventListener", "mouseup", func(ev js.Object) {
 		rect := canvas.Call("getBoundingClientRect")
 		x := float32((ev.Get("clientX").Int() - rect.Get("left").Int()))
 		y := float32((ev.Get("clientY").Int() - rect.Get("top").Int()))
-		responder.Mouse(x, y, RELEASE)
+
+		Mouse.X, Mouse.Y = float32(x), float32(y)
+		Mouse.Action = RELEASE
+
+		//responder.Mouse(x, y, RELEASE)
 	}, false)
 
 	canvas.Call("addEventListener", "touchstart", func(ev js.Object) {
@@ -85,7 +99,11 @@ func run(title string, width, height int, fullscreen bool) {
 			touch := ev.Get("changedTouches").Index(i)
 			x := float32((touch.Get("clientX").Int() - rect.Get("left").Int()))
 			y := float32((touch.Get("clientY").Int() - rect.Get("top").Int()))
-			responder.Mouse(x, y, PRESS)
+
+			Mouse.X, Mouse.Y = float32(x), float32(y)
+			Mouse.Action = PRESS
+
+			//responder.Mouse(x, y, PRESS)
 		}
 	}, false)
 
@@ -95,7 +113,11 @@ func run(title string, width, height int, fullscreen bool) {
 			touch := ev.Get("changedTouches").Index(i)
 			x := float32((touch.Get("clientX").Int() - rect.Get("left").Int()))
 			y := float32((touch.Get("clientY").Int() - rect.Get("top").Int()))
-			responder.Mouse(x, y, RELEASE)
+
+			Mouse.X, Mouse.Y = float32(x), float32(y)
+			Mouse.Action = RELEASE
+
+			//responder.Mouse(x, y, RELEASE)
 		}
 	}, false)
 
@@ -105,7 +127,11 @@ func run(title string, width, height int, fullscreen bool) {
 			touch := ev.Get("changedTouches").Index(i)
 			x := float32((touch.Get("clientX").Int() - rect.Get("left").Int()))
 			y := float32((touch.Get("clientY").Int() - rect.Get("top").Int()))
-			responder.Mouse(x, y, PRESS)
+
+			Mouse.X, Mouse.Y = float32(x), float32(y)
+			Mouse.Action = PRESS
+
+			//responder.Mouse(x, y, PRESS)
 		}
 	}, false)
 
@@ -115,12 +141,18 @@ func run(title string, width, height int, fullscreen bool) {
 			touch := ev.Get("changedTouches").Index(i)
 			x := float32((touch.Get("clientX").Int() - rect.Get("left").Int()))
 			y := float32((touch.Get("clientY").Int() - rect.Get("top").Int()))
-			responder.Mouse(x, y, MOVE)
+
+			Mouse.X, Mouse.Y = float32(x), float32(y)
+			Mouse.Action = MOVE
+
+			//responder.Mouse(x, y, MOVE)
 		}
 	}, false)
 
 	js.Global.Call("addEventListener", "keypress", func(ev js.Object) {
-		responder.Type(rune(ev.Get("charCode").Int()))
+		key := Key(ev.Get("keyCode").Int())
+		keyStates[key] = true
+		//responder.Type(rune(ev.Get("charCode").Int()))
 	}, false)
 
 	js.Global.Call("addEventListener", "keydown", func(ev js.Object) {
@@ -135,10 +167,10 @@ func run(title string, width, height int, fullscreen bool) {
 	}, false)
 
 	Gl.Viewport(0, 0, width, height)
-	Wo.New()
-	responder.Preload()
+	//Wo.New()
+	//responder.Preload()
 	Files.Load(func() {
-		responder.Setup()
+		//responder.Setup()
 		RequestAnimationFrame(animate)
 	})
 }
@@ -226,7 +258,7 @@ func loadImage(r Resource) (Image, error) {
 	return &ImageObject{img}, nil
 }
 
-func loadJson(r Resource) (string, error) {
+func loadJSON(r Resource) (string, error) {
 	ch := make(chan error, 1)
 
 	req := js.Global.Get("XMLHttpRequest").New()
@@ -245,6 +277,27 @@ func loadJson(r Resource) (string, error) {
 	}
 
 	return req.Get("responseText").Str(), nil
+}
+
+func loadFont(r Resource) (*truetype.Font, error) {
+	ch := make(chan error, 1)
+
+	req := js.Global.Get("XMLHttpRequest").New()
+	req.Call("open", "GET", r.url, true)
+	req.Call("addEventListener", "load", func(js.Object) {
+		go func() { ch <- nil }()
+	}, false)
+	req.Call("addEventListener", "error", func(o js.Object) {
+		go func() { ch <- &js.Error{Object: o} }()
+	}, false)
+	req.Call("send", nil)
+
+	err := <-ch
+	if err != nil {
+		return nil, err
+	}
+
+	return freetype.ParseFont(req.Get("responseText").Str()), nil
 }
 
 type ImageObject struct {

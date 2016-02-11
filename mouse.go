@@ -1,7 +1,7 @@
 package engi
 
 import (
-	"github.com/paked/engi/ecs"
+	"github.com/Lealen/engi/ecs"
 )
 
 // MouseComponent is the location for the MouseSystem to store its results; to be used / viewed by other Systems

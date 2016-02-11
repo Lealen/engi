@@ -1,7 +1,7 @@
 package engi
 
 import (
-	"github.com/paked/webgl"
+	"github.com/Lealen/webgl"
 )
 
 const bufferSize = 10000

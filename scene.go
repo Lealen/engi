@@ -3,7 +3,7 @@ package engi
 import (
 	"fmt"
 
-	"github.com/paked/engi/ecs"
+	"github.com/Lealen/engi/ecs"
 )
 
 var (

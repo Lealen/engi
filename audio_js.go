@@ -1,4 +1,4 @@
-// +build windows
+// +build js
 
 package engi
 
@@ -17,7 +17,7 @@ type AudioComponent struct {
 	File       string
 	Repeat     bool
 	Background bool
-	//player     *Player
+	player     *Player
 }
 
 func (*AudioComponent) Type() string {
@@ -37,7 +37,13 @@ func (AudioSystem) Type() string {
 func (as *AudioSystem) New(*ecs.World) {
 	as.System = ecs.NewSystem()
 
-	log.Println("Warning: audio is not yet implemented on Windows")
+	log.Println("Warning: audio is not yet implemented on JS")
 }
 
 func (as *AudioSystem) Update(entity *ecs.Entity, dt float32) {}
+
+type ReadSeekCloser interface {
+}
+
+type Player struct {
+}

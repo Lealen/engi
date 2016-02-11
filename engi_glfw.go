@@ -1,10 +1,12 @@
-// +build !netgo,!android
+// +build !js,!android
 
 package engi
 
 import (
 	"image"
 	"image/draw"
+	_ "image/gif"
+	_ "image/jpeg"
 	_ "image/png"
 	"io"
 	"io/ioutil"
@@ -13,10 +15,10 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/Lealen/webgl"
 	"github.com/go-gl/glfw/v3.1/glfw"
 	"github.com/golang/freetype"
 	"github.com/golang/freetype/truetype"
-	"github.com/paked/webgl"
 )
 
 var (
@@ -139,6 +141,28 @@ func CreateWindow(title string, width, height int, fullscreen bool) {
 				for _, s := range scene.world.Systems() {
 					if _, ok := s.(*RenderSystem); ok {
 						Shaders.def.SetProjection(gameWidth, gameHeight)
+					}
+				}
+			}
+		} else if keepAspectRatioOnScale {
+
+			//TODO: set gameWidth and gameHeight to values that player can see, so developer will be able to know what the screen size is
+			projectionWidth, projectionHeight := gameWidth, gameHeight
+
+			if windowWidth > windowHeight {
+				projectionWidth = (windowWidth / windowHeight) * gameHeight
+			} else if windowWidth < windowHeight {
+				projectionHeight = (windowHeight / windowWidth) * gameWidth
+			}
+
+			for _, scene := range scenes {
+				if scene.world == nil {
+					continue // with other scenes
+				}
+
+				for _, s := range scene.world.Systems() {
+					if _, ok := s.(*RenderSystem); ok {
+						Shaders.def.SetProjection(projectionWidth, projectionHeight)
 					}
 				}
 			}

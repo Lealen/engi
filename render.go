@@ -4,8 +4,8 @@ import (
 	"image/color"
 	"math"
 
-	"github.com/paked/engi/ecs"
-	"github.com/paked/webgl"
+	"github.com/Lealen/engi/ecs"
+	"github.com/Lealen/webgl"
 )
 
 const (

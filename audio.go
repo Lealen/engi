@@ -1,10 +1,11 @@
-// +build !windows
+// +build !windows,!js
+
 package engi
 
 import (
 	"log"
 
-	"github.com/paked/engi/ecs"
+	"github.com/Lealen/engi/ecs"
 	"golang.org/x/mobile/exp/audio/al"
 )
 

@@ -7,9 +7,9 @@ import (
 	"os"
 	"path"
 
+	"github.com/Lealen/webgl"
 	"github.com/golang/freetype/truetype"
 	"github.com/luxengine/math"
-	"github.com/paked/webgl"
 )
 
 type Resource struct {
@@ -91,12 +91,7 @@ func (l *Loader) Sound(name string) ReadSeekCloser {
 func (l *Loader) Load(onFinish func()) {
 	for _, r := range l.resources {
 		switch r.kind {
-		case "png":
-			data, err := loadImage(r)
-			if err == nil {
-				l.images[r.name] = NewTexture(data)
-			}
-		case "jpg":
+		case "jpg", "png", "gif":
 			data, err := loadImage(r)
 			if err == nil {
 				l.images[r.name] = NewTexture(data)

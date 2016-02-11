@@ -11,7 +11,11 @@ type Point struct {
 func (p *Point) Set(x, y float32) {
 	p.X = x
 	p.Y = y
+}
 
+func (p *Point) SetPoint(p2 Point) {
+	p.X = p2.X
+	p.Y = p2.Y
 }
 
 func (p *Point) SetTo(v float32) {

@@ -3,8 +3,8 @@ package engi
 import (
 	"fmt"
 
-	"github.com/paked/engi/ecs"
-	"github.com/paked/webgl"
+	"github.com/Lealen/engi/ecs"
+	"github.com/Lealen/webgl"
 )
 
 var (
@@ -18,11 +18,12 @@ var (
 	Mailbox      *MessageManager
 	cam          *cameraSystem
 
-	scaleOnResize   = false
-	fpsLimit        = 120
-	headless        = false
-	vsync           = true
-	resetLoopTicker = make(chan bool, 1)
+	scaleOnResize          = false
+	keepAspectRatioOnScale = false
+	fpsLimit               = 120
+	headless               = false
+	vsync                  = true
+	resetLoopTicker        = make(chan bool, 1)
 )
 
 type RunOptions struct {
@@ -44,6 +45,9 @@ type RunOptions struct {
 	// ScaleOnResize indicates whether or not engi should make things larger/smaller whenever the screen resizes
 	ScaleOnResize bool
 
+	// KeepAspectRatioOnScale indicates whether or not engi should keep aspect ratio whenever it tries to scale everything that is on screen whenever the screen resizes (requires ScaleOnResize=true)
+	KeepAspectRatioOnScale bool
+
 	// FPSLimit indicates the maximum number of frames per second
 	FPSLimit int
 }
@@ -51,6 +55,7 @@ type RunOptions struct {
 func Open(opts RunOptions, defaultScene Scene) {
 	// Save settings
 	SetScaleOnResize(opts.ScaleOnResize)
+	SetKeepAspectRatioOnScale(opts.KeepAspectRatioOnScale)
 	SetFPSLimit(opts.FPSLimit)
 	vsync = opts.VSync
 
@@ -81,6 +86,10 @@ func SetBg(color uint32) {
 
 func SetScaleOnResize(b bool) {
 	scaleOnResize = b
+}
+
+func SetKeepAspectRatioOnScale(b bool) {
+	keepAspectRatioOnScale = b
 }
 
 func SetFPSLimit(limit int) error {

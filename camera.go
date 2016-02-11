@@ -3,14 +3,18 @@ package engi
 import (
 	"sync"
 
+	"github.com/Lealen/engi/ecs"
 	"github.com/go-gl/mathgl/mgl32"
-	"github.com/paked/engi/ecs"
 )
 
 var (
 	MinZoom float32 = 0.25
 	MaxZoom float32 = 3
 )
+
+func GetCamera() *cameraSystem {
+	return cam
+}
 
 // CameraSystem is a System that manages the state of the Camera
 type cameraSystem struct {
