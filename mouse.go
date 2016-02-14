@@ -107,6 +107,7 @@ func (m *MouseSystem) Update(entity *ecs.Entity, dt float32) {
 		case RELEASE:
 			m.mouseDown = false
 			mc.Dragged = false
+			mc.Clicked = false
 		case MOVE:
 			if m.mouseDown {
 				mc.Dragged = true
@@ -116,6 +117,8 @@ func (m *MouseSystem) Update(entity *ecs.Entity, dt float32) {
 		if mc.Hovered {
 			mc.Leave = true
 		}
+		mc.Enter = false
 		mc.Hovered = false
+		mc.Dragged = false
 	}
 }
