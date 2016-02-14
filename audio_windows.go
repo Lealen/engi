@@ -41,3 +41,9 @@ func (as *AudioSystem) New(*ecs.World) {
 }
 
 func (as *AudioSystem) Update(entity *ecs.Entity, dt float32) {}
+
+type ReadSeekCloser interface {
+}
+
+type Player struct {
+}
