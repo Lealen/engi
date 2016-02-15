@@ -54,14 +54,24 @@ func CreateWindow(title string, width, height int, fullscreen bool) {
 	Crosshair = glfw.CreateStandardCursor(int(glfw.CrosshairCursor))
 
 	monitor := glfw.GetPrimaryMonitor()
-	mode := monitor.GetVideoMode()
+
+	modeWidth := width
+	modeHeight := height
+
+	if monitor != nil {
+		mode := monitor.GetVideoMode()
+		if mode != nil {
+			modeWidth = mode.Width
+			modeHeight = mode.Height
+		}
+	}
 
 	gameWidth = float32(width)
 	gameHeight = float32(height)
 
 	if fullscreen {
-		width = mode.Width
-		height = mode.Height
+		width = modeWidth
+		height = modeHeight
 		glfw.WindowHint(glfw.Decorated, 0)
 	} else {
 		monitor = nil
@@ -76,7 +86,7 @@ func CreateWindow(title string, width, height int, fullscreen bool) {
 	window.MakeContextCurrent()
 
 	if !fullscreen {
-		window.SetPos((mode.Width-width)/2, (mode.Height-height)/2)
+		window.SetPos((modeWidth-width)/2, (modeHeight-height)/2)
 	}
 
 	width, height = window.GetFramebufferSize()
