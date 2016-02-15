@@ -106,13 +106,17 @@ func CreateWindow(title string, width, height int, fullscreen bool) {
 	})
 
 	window.SetCursorPosCallback(func(window *glfw.Window, x, y float64) {
-		Mouse.X, Mouse.Y = float32(x), float32(y)
-		Mouse.Action = MOVE
+		if Mouse.X != float32(x) || Mouse.Y != float32(y) {
+			Mouse.X, Mouse.Y = float32(x), float32(y)
+			Mouse.Action = MOVE
+		}
 	})
 
 	window.SetMouseButtonCallback(func(window *glfw.Window, b glfw.MouseButton, a glfw.Action, m glfw.ModifierKey) {
 		x, y := window.GetCursorPos()
 		Mouse.X, Mouse.Y = float32(x), float32(y)
+
+		//TODO: mouse buttons handling
 
 		if a == glfw.Press {
 			Mouse.Action = PRESS
