@@ -116,7 +116,12 @@ func CreateWindow(title string, width, height int, fullscreen bool) {
 		x, y := window.GetCursorPos()
 		Mouse.X, Mouse.Y = float32(x), float32(y)
 
-		//TODO: mouse buttons handling
+		key := Key(b)
+		if a == glfw.Press {
+			keyStates[key] = true
+		} else {
+			keyStates[key] = false
+		}
 
 		if a == glfw.Press {
 			Mouse.Action = PRESS
@@ -308,6 +313,19 @@ func SetVSync(enabled bool) {
 
 func init() {
 	runtime.LockOSThread()
+
+	MouseButton1 = Key(glfw.MouseButton1)
+	MouseButton2 = Key(glfw.MouseButton2)
+	MouseButton3 = Key(glfw.MouseButton3)
+	MouseButton4 = Key(glfw.MouseButton4)
+	MouseButton5 = Key(glfw.MouseButton5)
+	MouseButton6 = Key(glfw.MouseButton6)
+	MouseButton7 = Key(glfw.MouseButton7)
+	MouseButton8 = Key(glfw.MouseButton8)
+	MouseButtonLast = MouseButton8
+	MouseButtonLeft = MouseButton1
+	MouseButtonRight = MouseButton2
+	MouseButtonMiddle = MouseButton3
 
 	Dash = Key(glfw.KeyMinus)
 	Apostrophe = Key(glfw.KeyApostrophe)

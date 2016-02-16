@@ -17,6 +17,19 @@ var (
 )
 
 var (
+	MouseButton1      = Key(0)
+	MouseButton2      = Key(1)
+	MouseButton3      = Key(2)
+	MouseButton4      = Key(3)
+	MouseButton5      = Key(4)
+	MouseButton6      = Key(5)
+	MouseButton7      = Key(6)
+	MouseButton8      = Key(7)
+	MouseButtonLast   = MouseButton8
+	MouseButtonLeft   = MouseButton1
+	MouseButtonRight  = MouseButton2
+	MouseButtonMiddle = MouseButton3
+
 	Dash         = Key(189)
 	Apostrophe   = Key(222)
 	Semicolon    = Key(186)
