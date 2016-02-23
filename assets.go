@@ -13,9 +13,10 @@ import (
 )
 
 type Resource struct {
-	kind string
-	name string
-	url  string
+	kind   string
+	name   string
+	url    string
+	loaded bool
 }
 
 type Loader struct {
@@ -89,7 +90,12 @@ func (l *Loader) Sound(name string) ReadSeekCloser {
 }
 
 func (l *Loader) Load(onFinish func()) {
-	for _, r := range l.resources {
+	for k, r := range l.resources {
+		if r.loaded {
+			continue
+		}
+		l.resources[k].loaded = true
+
 		switch r.kind {
 		case "jpg", "png", "gif":
 			data, err := loadImage(r)
