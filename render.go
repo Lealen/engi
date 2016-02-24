@@ -193,13 +193,15 @@ func (ren *RenderComponent) generateBufferContent() []float32 {
 type RenderSystem struct {
 	*ecs.System
 
-	renders map[PriorityLevel][]*ecs.Entity
+	renders [HighestGround + 1][]*ecs.Entity
 	changed bool
 	world   *ecs.World
 }
 
 func (rs *RenderSystem) New(w *ecs.World) {
-	rs.renders = make(map[PriorityLevel][]*ecs.Entity)
+	for k := range rs.renders {
+		rs.renders[k] = nil
+	}
 	rs.System = ecs.NewSystem()
 	rs.world = w
 	rs.ShouldSkipOnHeadless = true
@@ -242,7 +244,9 @@ func (rs *RenderSystem) Pre() {
 		return
 	}
 
-	rs.renders = make(map[PriorityLevel][]*ecs.Entity)
+	for k := range rs.renders {
+		rs.renders[k] = nil
+	}
 }
 
 func (rs *RenderSystem) Post() {
