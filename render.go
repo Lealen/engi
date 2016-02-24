@@ -10,12 +10,12 @@ import (
 
 const (
 	// HighestGround is the highest PriorityLevel that will be rendered
-	HighestGround PriorityLevel = 50
+	HighestGround PriorityLevel = 100
 	// HUDGround is a PriorityLevel from which everything isn't being affected by the Camera
-	HUDGround    PriorityLevel = 40
-	Foreground   PriorityLevel = 30
-	MiddleGround PriorityLevel = 20
-	ScenicGround PriorityLevel = 10
+	HUDGround    PriorityLevel = 80
+	Foreground   PriorityLevel = 60
+	MiddleGround PriorityLevel = 40
+	ScenicGround PriorityLevel = 20
 	// Background is the lowest PriorityLevel that will be rendered
 	Background PriorityLevel = 0
 	// Hidden indicates that it should not be rendered by the RenderSystem
