@@ -11,6 +11,7 @@ type Shader interface {
 	Pre()
 	Draw(texture *webgl.Texture, buffer *webgl.Buffer, x, y, rotation float32)
 	Post()
+	SetProjection(width, height float32)
 }
 
 type DefaultShader struct {

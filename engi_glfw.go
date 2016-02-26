@@ -160,6 +160,7 @@ func CreateWindow(title string, width, height int, fullscreen bool) {
 				for _, s := range scene.world.Systems() {
 					if _, ok := s.(*RenderSystem); ok {
 						Shaders.def.SetProjection(gameWidth, gameHeight)
+						Shaders.Get(HUDGround).SetProjection(gameWidth, gameHeight)
 					}
 				}
 			}
@@ -182,6 +183,7 @@ func CreateWindow(title string, width, height int, fullscreen bool) {
 				for _, s := range scene.world.Systems() {
 					if _, ok := s.(*RenderSystem); ok {
 						Shaders.def.SetProjection(projectionWidth, projectionHeight)
+						Shaders.Get(HUDGround).SetProjection(projectionWidth, projectionHeight)
 					}
 				}
 			}
